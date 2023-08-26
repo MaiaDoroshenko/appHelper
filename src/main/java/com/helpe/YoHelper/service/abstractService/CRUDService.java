@@ -1,4 +1,4 @@
-package com.helpe.YoHelper.service;
+package com.helpe.YoHelper.service.abstractService;
 
 import com.helpe.YoHelper.util.SortType;
 import org.hibernate.type.SortedMapType;

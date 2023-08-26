@@ -28,7 +28,7 @@ public class UserService implements IUserService {
     @Override
     public UserResponse create(UserRequest request) {
         try {
-            if (userRepository.existsByMail(request.getEmail())) {
+            if (userRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("El correo electronico ya esta en uso ");
             }
             var userToPersit = UserEntity.builder()
@@ -58,7 +58,7 @@ public class UserService implements IUserService {
     public UserResponse update(UserRequest request, Long id) {
         var userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("El usuario no encontrado para el ID: " + id));
-        if (userToUpdate.getEmail().equals(request.getEmail()) && userRepository.existsByMail(request.getEmail())) {
+        if (userToUpdate.getEmail().equals(request.getEmail()) && userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("El correo electronico ya esta en uso");
         }
         userToUpdate.setName(request.getName());
@@ -109,4 +109,6 @@ public class UserService implements IUserService {
         BeanUtils.copyProperties(entity, response);
         return response;
     }
+
+
 }
