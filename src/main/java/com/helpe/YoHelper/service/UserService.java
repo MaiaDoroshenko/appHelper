@@ -8,6 +8,7 @@ import com.helpe.YoHelper.service.abstractService.IUserService;
 import com.helpe.YoHelper.util.SortType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +22,11 @@ import java.util.NoSuchElementException;
 @Service
 @AllArgsConstructor
 @Builder
+@Slf4j
 public class UserService implements IUserService {
 
     public final UserRepository userRepository;
+    public final EmailService emailService;
 
     @Override
     public UserResponse create(UserRequest request) {
@@ -40,12 +43,16 @@ public class UserService implements IUserService {
                     .rol(request.getRol())
                     .build();
             var userPersisted = userRepository.save(userToPersit);
+            emailService.sendWelcomeEmailTo("maiadoroshenko@gmail.com", "Maia");
+
 
 
             return entityToResponse(userPersisted);
         } catch (Exception ex) {
             throw new RuntimeException("Error al crear el usuario" + ex.getMessage());
         }
+
+
     }
 
     @Override
@@ -71,6 +78,7 @@ public class UserService implements IUserService {
 
         return entityToResponse(userUpdate);
     }
+
     @Override
     public Page<UserResponse> findAll(Integer page, Integer size, SortType sortType) throws Exception {
         List<UserEntity> users = userRepository.findAll();
